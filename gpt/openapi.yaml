@@ -1,0 +1,181 @@
+openapi: 3.1.0
+info:
+  title: LivetubeSTAR Site Control API
+  version: 1.0.0
+  description: ChatGPTからWordPress記事を作成・更新するAPI
+servers:
+  - url: https://your-wordpress-site.com
+    description: WordPressサイトのURL（実際のドメインに置き換えてください）
+paths:
+  /wp-json/lts/v1/create-post:
+    post:
+      operationId: createPost
+      summary: 新しい記事を作成
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - content
+              properties:
+                title:
+                  type: string
+                  description: 記事タイトル
+                content:
+                  type: string
+                  description: WordPressにそのまま投稿する本文HTML
+                excerpt:
+                  type: string
+                  description: 抜粋
+                slug:
+                  type: string
+                  description: URLスラッグ
+                status:
+                  type: string
+                  enum: [publish, draft, pending, private]
+                  description: 投稿ステータス（デフォルト推奨値はdraft）
+                date:
+                  type: string
+                  description: 投稿日時
+                meta_description:
+                  type: string
+                  description: メタディスクリプション
+                category_ids:
+                  type: array
+                  items:
+                    type: integer
+                  description: カテゴリーID配列
+                category_names:
+                  type: array
+                  items:
+                    type: string
+                  description: カテゴリー名配列。存在しなければ新規作成
+                tag_ids:
+                  type: array
+                  items:
+                    type: integer
+                  description: タグID配列
+                tag_names:
+                  type: array
+                  items:
+                    type: string
+                  description: タグ名配列。存在しなければ新規作成
+      responses:
+        "200":
+          description: 記事作成成功
+        "400":
+          description: リクエスト不正
+        "401":
+          description: APIキー不正
+        "500":
+          description: サーバーエラー
+  /wp-json/lts/v1/update-post:
+    post:
+      operationId: updatePost
+      summary: 記事を更新
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - post_id
+              properties:
+                post_id:
+                  type: integer
+                  description: 更新対象の記事ID
+                title:
+                  type: string
+                  description: 記事タイトル
+                content:
+                  type: string
+                  description: WordPressにそのまま投稿する本文HTML
+                excerpt:
+                  type: string
+                  description: 抜粋
+                slug:
+                  type: string
+                  description: URLスラッグ
+                status:
+                  type: string
+                  enum: [publish, draft, pending, private]
+                  description: 投稿ステータス
+                date:
+                  type: string
+                  description: 投稿日時
+                meta_description:
+                  type: string
+                  description: メタディスクリプション
+                category_ids:
+                  type: array
+                  items:
+                    type: integer
+                  description: カテゴリーID配列
+                category_names:
+                  type: array
+                  items:
+                    type: string
+                  description: カテゴリー名配列。存在しなければ新規作成
+                tag_ids:
+                  type: array
+                  items:
+                    type: integer
+                  description: タグID配列
+                tag_names:
+                  type: array
+                  items:
+                    type: string
+                  description: タグ名配列。存在しなければ新規作成
+      responses:
+        "200":
+          description: 記事更新成功
+        "400":
+          description: リクエスト不正
+        "401":
+          description: APIキー不正
+        "404":
+          description: 記事が見つからない
+        "500":
+          description: サーバーエラー
+  /wp-json/lts/v1/categories:
+    get:
+      operationId: getCategories
+      summary: カテゴリー一覧取得
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: カテゴリー取得成功
+        "401":
+          description: APIキー不正
+        "500":
+          description: サーバーエラー
+  /wp-json/lts/v1/tags:
+    get:
+      operationId: getTags
+      summary: タグ一覧取得
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: タグ取得成功
+        "401":
+          description: APIキー不正
+        "500":
+          description: サーバーエラー
+components:
+  schemas: {}
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: WordPressプラグインで設定したAPIキー（wp-config.phpのLTS_API_KEYと一致させる）
