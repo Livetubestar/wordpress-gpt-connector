@@ -1,0 +1,39 @@
+# 環境変数・機密情報
+.env
+.env.local
+.env.production
+*.key
+*.pem
+secrets.json
+
+# WordPressプラグインの設定ファイル（機密情報が含まれる可能性がある場合）
+wp-config.php
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# エディタ・IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ログファイル
+*.log
+logs/
+
+# 依存関係（将来的にnpmやcomposerを使う場合）
+node_modules/
+vendor/
+
+# 一時ファイル
+tmp/
+temp/
